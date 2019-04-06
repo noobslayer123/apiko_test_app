@@ -1,118 +1,83 @@
-document.getElementById("button_search").addEventListener("click", loadMovies);
-document
-  .getElementById("button_home")
-  .addEventListener("click", getTrendingMovies);
-window.addEventListener("load", getTrendingMovies, true);
 const apiKey = "7d68842d2134729c0de231f97983f4c1";
+const input = document.getElementById("filter");
+document.getElementById("button_search").addEventListener("click", () => {
+  if (input.value != "") {
+    searchMovies();
+    input.value = "";
+  } else {
+    showTrendingMovies();
+  }
+});
+window.addEventListener("load", showTrendingMovies);
 
 function showMovieDetails(id) {
-  const xhr = new XMLHttpRequest();
   const url = `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}`;
-  xhr.open("GET", url, true);
-  xhr.onload = function() {
-    if (this.status == 200) {
-      const movie = JSON.parse(this.responseText);
-      let output =
-        '<div class="movie">' +
-        "<img src='https://image.tmdb.org/t/p/w500" +
-        movie.poster_path +
-        "' />" +
-        "<h2>" +
-        movie.title +
-        "</h2>" +
-        "<p>" +
-        movie.overview +
-        "</p>" +
-        "</div>" +
-        "<h3>Recommendations</h3>" +
-        "<div id='movie_rec></div>'";
+  fetch(url)
+    .then(res => res.json())
+    .then(data => {
+      let output = `<img src='https://image.tmdb.org/t/p/w500${
+        data.poster_path
+      }'/>
+      <h2>${data.title}</h2><p>${
+        data.overview
+      }</p><h3>Recommendations</h3><div id='movie_rec'></div>`;
       document.getElementById("movies").innerHTML = output;
-    }
-  };
-  xhr.send();
-  getRecommendations(id);
+    })
+    .then(showRecomendations(id))
+    .catch(err => console.log(err));
 }
-function getRecommendations(id) {
-  const xhr = new XMLHttpRequest();
+
+function showRecomendations(id) {
+  let output = "<ul class='movie'>";
   const url = `https://api.themoviedb.org/3/movie/${id}/recommendations?api_key=${apiKey}`;
-  xhr.open("GET", url, true);
-  xhr.onload = function() {
-    if (this.status == 200) {
-      const movies = JSON.parse(this.responseText);
-      let output = "";
-      for (let i in movies.results) {
-        output +=
-          '<div class="movie_rec">' +
-          "<ul>" +
-          "<li>" +
-          "<a href='#' onClick='showMovieDetails(" +
-          movies.results[i].id +
-          ")'>" +
-          movies.results[i].title +
-          " </a>" +
-          " </li>" +
-          "</ul>" +
-          "</div>";
+  fetch(url)
+    .then(res => res.json())
+    .then(data => {
+      for (let i in data.results) {
+        let movie = data.results[i];
+        output += `<li class="movie_rec"><a href='#' onClick='showMovieDetails(${
+          movie.id
+        })'>${movie.title}</a></li>`;
       }
+      output += "</ul>";
       document.getElementById("movies").innerHTML += output;
-    }
-  };
-  xhr.send();
+    })
+    .catch(err => console.log(err));
 }
 
-function getTrendingMovies() {
-  const xhr = new XMLHttpRequest();
-  const url = `https://api.themoviedb.org/3/trending/all/day?api_key=${apiKey}`;
-  xhr.open("GET", url, true);
-  xhr.onload = function() {
-    if (this.status == 200) {
-      const movies = JSON.parse(this.responseText);
-      let output = "";
-      for (let i in movies.results) {
-        output +=
-          '<div class="movie">' +
-          "<ul>" +
-          "<li>" +
-          "<a href='#' onClick='showMovieDetails(" +
-          movies.results[i].id +
-          ")'>" +
-          movies.results[i].title +
-          " </a>" +
-          " </li>" +
-          "</ul>" +
-          "</div>";
+function showTrendingMovies() {
+  let output = "<ul class='movie'>";
+  const url = `https://api.themoviedb.org/3/trending/movie/day?api_key=${apiKey}`;
+  fetch(url)
+    .then(res => res.json())
+    .then(data => {
+      for (let i in data.results) {
+        let movie = data.results[i];
+        output += `<li><a href='#' onClick='showMovieDetails(${movie.id})'>${
+          movie.title
+        }</a></li>`;
       }
+      output += "</ul>";
       document.getElementById("movies").innerHTML = output;
-    }
-  };
-  xhr.send();
+    })
+    .catch(err => console.log(err));
 }
 
-function loadMovies() {
-  const xhr = new XMLHttpRequest();
+function searchMovies() {
+  let output = "<ul class='movie'>";
   const query = document.getElementById("filter").value;
   const url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${query}`;
-  xhr.open("GET", url, true);
-  xhr.onload = function() {
-    if (this.status == 200) {
-      const movies = JSON.parse(this.responseText);
-      let output = "";
-      for (let i in movies.results) {
-        output +=
-          '<div class="movie">' +
-          "<ul>" +
-          "<li>" +
-          "<a href='#' onClick='showMovieDetails(" +
-          movies.results[i].id +
-          ")'>" +
-          movies.results[i].title +
-          " </a>" +
-          " </li>" +
-          "</ul>" +
-          "</div>";
+  fetch(url)
+    .then(res => res.json())
+    .then(data => {
+      for (let i in data.results) {
+        let movie = data.results[i];
+        output += `<li><a href='#' onClick='showMovieDetails(${movie.id})'>${
+          movie.title
+        }</a></li>`;
       }
+      output += "</ul>";
       document.getElementById("movies").innerHTML = output;
-    }
-  };
-  xhr.send();
+    })
+    .catch(err => console.log(err));
 }
