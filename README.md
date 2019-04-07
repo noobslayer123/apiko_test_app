@@ -1,4 +1,4 @@
-##### Apiko React Course Test Application
+## Apiko React Course Test Application
 
 Stanislav Holub
 
