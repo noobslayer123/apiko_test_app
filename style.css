@@ -30,7 +30,7 @@ button:hover {
 }
 .movie_rec {
   font-size: 0.8rem;
-  margin-left: 5%;
+  margin-left: 10px;
 }
 #movie ul {
   list-style-type: circle;
@@ -40,12 +40,11 @@ h1 {
   margin: 10px;
   font-weight: 400;
 }
-h2 {
-  margin: 10px auto;
-}
+h2,
 h3 {
-  margin: 10px 3%;
+  margin: 10px;
 }
+
 img {
   max-width: 15%;
   height: auto;

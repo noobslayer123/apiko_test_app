@@ -1,4 +1,5 @@
 const apiKey = "7d68842d2134729c0de231f97983f4c1";
+let moviesHtml = document.getElementById("movies");
 const input = document.getElementById("filter");
 document.getElementById("button_search").addEventListener("click", () => {
   if (input.value != "") {
@@ -21,9 +22,9 @@ function showMovieDetails(id) {
       <h2>${data.title}</h2><p>${
         data.overview
       }</p><h3>Recommendations</h3><div id='movie_rec'></div>`;
-      document.getElementById("movies").innerHTML = output;
+      movies.innerHTML = output;
+      showRecomendations(id);
     })
-    .then(showRecomendations(id))
     .catch(err => console.log(err));
 }
 
@@ -33,14 +34,19 @@ function showRecomendations(id) {
   fetch(url)
     .then(res => res.json())
     .then(data => {
-      for (let i in data.results) {
-        let movie = data.results[i];
-        output += `<li class="movie_rec"><a href='#' onClick='showMovieDetails(${
-          movie.id
-        })'>${movie.title}</a></li>`;
+      if (data.results != "") {
+        for (let i in data.results) {
+          let movie = data.results[i];
+          output += `<li class="movie_rec"><a href='#' onClick='showMovieDetails(${
+            movie.id
+          })'>${movie.title}</a></li>`;
+        }
+      } else {
+        output +=
+          "<p class='movie_rec'>There are no recommendations for this movie.</p>";
       }
       output += "</ul>";
-      document.getElementById("movies").innerHTML += output;
+      movies.innerHTML += output;
     })
     .catch(err => console.log(err));
 }
@@ -58,7 +64,7 @@ function showTrendingMovies() {
         }</a></li>`;
       }
       output += "</ul>";
-      document.getElementById("movies").innerHTML = output;
+      movies.innerHTML = output;
     })
     .catch(err => console.log(err));
 }
@@ -77,7 +83,7 @@ function searchMovies() {
         }</a></li>`;
       }
       output += "</ul>";
-      document.getElementById("movies").innerHTML = output;
+      movies.innerHTML = output;
     })
     .catch(err => console.log(err));
 }
