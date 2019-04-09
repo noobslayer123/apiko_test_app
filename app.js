@@ -1,8 +1,8 @@
 const apiKey = "7d68842d2134729c0de231f97983f4c1";
-let moviesHtml = document.getElementById("movies");
+const moviesHtml = document.getElementById("movies");
 const input = document.getElementById("filter");
 document.getElementById("button_search").addEventListener("click", () => {
-  if (input.value != "") {
+  if (input.value !== "") {
     searchMovies();
     input.value = "";
   } else {
@@ -16,12 +16,10 @@ function showMovieDetails(id) {
   fetch(url)
     .then(res => res.json())
     .then(data => {
-      let output = `<img src='https://image.tmdb.org/t/p/w500${
-        data.poster_path
-      }'/>
-      <h2>${data.title}</h2><p>${
-        data.overview
-      }</p><h3>Recommendations</h3><div id='movie_rec'></div>`;
+      const { poster_path, overview, title } = data;
+
+      let output = `<img src='https://image.tmdb.org/t/p/w500${poster_path}'/>
+      <h2>${title}</h2><p>${overview}</p><h3>Recommendations</h3><div id='movie_rec'></div>`;
       movies.innerHTML = output;
       showRecomendations(id);
     })
@@ -34,13 +32,12 @@ function showRecomendations(id) {
   fetch(url)
     .then(res => res.json())
     .then(data => {
-      if (data.results != "") {
-        for (let i in data.results) {
-          let movie = data.results[i];
+      if (data.results !== "") {
+        data.results.forEach(movie => {
           output += `<li class="movie_rec"><a href='#' onClick='showMovieDetails(${
             movie.id
           })'>${movie.title}</a></li>`;
-        }
+        });
       } else {
         output +=
           "<p class='movie_rec'>There are no recommendations for this movie.</p>";
@@ -57,12 +54,11 @@ function showTrendingMovies() {
   fetch(url)
     .then(res => res.json())
     .then(data => {
-      for (let i in data.results) {
-        let movie = data.results[i];
-        output += `<li><a href='#' onClick='showMovieDetails(${movie.id})'>${
-          movie.title
-        }</a></li>`;
-      }
+      data.results.forEach(movie => {
+        output += `<li class="movie_rec"><a href='#' onClick='showMovieDetails(${
+          movie.id
+        })'>${movie.title}</a></li>`;
+      });
       output += "</ul>";
       movies.innerHTML = output;
     })
@@ -76,12 +72,11 @@ function searchMovies() {
   fetch(url)
     .then(res => res.json())
     .then(data => {
-      for (let i in data.results) {
-        let movie = data.results[i];
-        output += `<li><a href='#' onClick='showMovieDetails(${movie.id})'>${
-          movie.title
-        }</a></li>`;
-      }
+      data.results.forEach(movie => {
+        output += `<li class="movie_rec"><a href='#' onClick='showMovieDetails(${
+          movie.id
+        })'>${movie.title}</a></li>`;
+      });
       output += "</ul>";
       movies.innerHTML = output;
     })
