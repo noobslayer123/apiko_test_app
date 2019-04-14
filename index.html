@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" href="style.css" />
+    <!-- <link rel="stylesheet" href="style.css" /> -->
     <link
       href="https://fonts.googleapis.com/css?family=Lato"
       rel="stylesheet"
@@ -11,12 +11,19 @@
   </head>
   <body>
     <nav id="nav">
-      <input id="filter" placeholder="Movie" />
-      <br />
-      <button id="button_search">Search</button>
+      <h1 id="logo">TMDb Movies</h1>
+      <div id="search">
+        <input id="filter" placeholder="Movie" />
+        <br />
+        <button id="button_search">Search</button>
+      </div>
     </nav>
-    <h1>TMDb Movies</h1>
-    <div id="movies"></div>
+
+    <div class="container">
+      <div id="movies"></div>
+    </div>
+
+    <script src="./appLibrary.js" type="text/javascript"></script>
     <script src="./app.js" type="text/javascript"></script>
   </body>
 </html>
